@@ -1,0 +1,123 @@
+name: Generate keyword suggestions on a weekly basis
+
+on:
+  #push:
+  #  branches:
+  #      - master
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 2"
+
+jobs:
+  keyword_suggestions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Generate EN new keyword suggestions
+        uses: BrightSoftwares/blogpost-tools/keyword-suggestion@main
+        with:
+          keyword_seed: /github/workspace/en/_drafts/keywords.csv
+          keyword_suggestions_generation_folder: /github/workspace/en/_drafts
+          drafts_path: /github/workspace/en/_drafts/
+          keyword_min_volume_eligible: 500
+          keyword_max_volume_eligible: 5000000
+          keyword_suggestions_blogpost_file: keyword_suggestions_merged_blogpost_candidates.csv
+          
+      - name: Generate EN blog post candidates data 10-100
+        uses: BrightSoftwares/blogpost-tools/blogpost-candidates-generation@main
+        with:
+        
+          src_folder: /github/workspace/en/_drafts/
+          keyword_suggestion_generation_folder: /github/workspace/en/_drafts/
+          keyword_suggestion_generation_file: /github/workspace/en/_drafts/keyword_suggestions.csv
+          keyword_suggestions_blogpost_file: /github/workspace/en/_drafts/kw_blogpost_candidates_10_100.csv
+          keyword_min_volume_eligible: 10
+          keyword_max_volume_eligible: 100
+          
+      - name: Generate EN blog post candidates data 100-500
+        uses: BrightSoftwares/blogpost-tools/blogpost-candidates-generation@main
+        with:
+        
+          src_folder: /github/workspace/en/_drafts/
+          keyword_suggestion_generation_folder: /github/workspace/en/_drafts/
+          keyword_suggestion_generation_file: /github/workspace/en/_drafts/keyword_suggestions.csv
+          keyword_suggestions_blogpost_file: /github/workspace/en/_drafts/kw_blogpost_candidates_100_500.csv
+          keyword_min_volume_eligible: 100
+          keyword_max_volume_eligible: 500
+          
+      - name: Generate EN new youtube vids
+        uses: BrightSoftwares/blogpost-tools/youtube-vid-finder@main
+        with:
+          src_folder: /github/workspace/en/_drafts/
+          youtube_api_key: ${{ secrets.YOUTUBE_API_KEY }}
+          yt_search_results_file: /github/workspace/en/_drafts/youtube_search_results.csv
+          yt_already_used_vids: /github/workspace/en/_drafts/youtube_videos_used.csv
+          language: en
+          country: us
+          
+      - name: Generate FR new keyword suggestions
+        uses: BrightSoftwares/blogpost-tools/keyword-suggestion@main
+        with:
+          keyword_seed: /github/workspace/fr/_drafts/keywords.csv
+          keyword_suggestions_generation_folder: /github/workspace/fr/_drafts
+          drafts_path: /github/workspace/fr/_drafts/
+          keyword_min_volume_eligible: 100
+          keyword_max_volume_eligible: 5000000
+          keyword_suggestions_blogpost_file: keyword_suggestions_merged_blogpost_candidates.csv
+          
+      - name: Generate FR blog post candidates data 10-100
+        uses: BrightSoftwares/blogpost-tools/blogpost-candidates-generation@main
+        with:
+        
+          src_folder: /github/workspace/fr/_drafts/
+          keyword_suggestion_generation_folder: /github/workspace/fr/_drafts/
+          keyword_suggestion_generation_file: /github/workspace/fr/_drafts/keyword_suggestions.csv
+          keyword_suggestions_blogpost_file: /github/workspace/fr/_drafts/kw_blogpost_candidates_10_100.csv
+          keyword_min_volume_eligible: 10
+          keyword_max_volume_eligible: 100
+          
+      - name: Generate FR blog post candidates data 100-500
+        uses: BrightSoftwares/blogpost-tools/blogpost-candidates-generation@main
+        with:
+        
+          src_folder: /github/workspace/fr/_drafts/
+          keyword_suggestion_generation_folder: /github/workspace/fr/_drafts/
+          keyword_suggestion_generation_file: /github/workspace/fr/_drafts/keyword_suggestions.csv
+          keyword_suggestions_blogpost_file: /github/workspace/fr/_drafts/kw_blogpost_candidates_100_500.csv
+          keyword_min_volume_eligible: 100
+          keyword_max_volume_eligible: 500
+          
+      - name: Generate FR new youtube vids
+        uses: BrightSoftwares/blogpost-tools/youtube-vid-finder@main
+        with:
+          src_folder: /github/workspace/fr/_drafts/
+          youtube_api_key: ${{ secrets.YOUTUBE_API_KEY }}
+          yt_search_results_file: /github/workspace/fr/_drafts/youtube_search_results.csv
+          yt_already_used_vids: /github/workspace/fr/_drafts/youtube_videos_used.csv
+          language: fr
+          country: fr
+          
+      - name: Translate the posts into french
+        uses: BrightSoftwares/blogpost-tools/translate-blogpost@main
+        with:
+          src_folder: /github/workspace/en/_posts/
+          dest_folder: /github/workspace/fr/_drafts/
+          scan_folder: /github/workspace/fr/
+          dry_run: True
+          dest_lang: fr
+          
+      - run: |
+          # date > generated.txt
+          CHANGES_EXIST="$(git status --porcelain | wc -l)"
+          echo "There are $CHANGES_EXIST changes to commit"
+          if [ "$CHANGES_EXIST" -eq 0 ]; then
+            echo "There are no changes to commit"
+          else
+            echo "Committing changes"
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .
+            git commit -m "generated and changed files"
+            git push
+          fi

@@ -30,8 +30,8 @@ jobs:
       - name: SEO Advanced analysis
         uses: BrightSoftwares/blogpost-tools/seo-analysis@main
         with:
-          site_url: "sc-domain:bright-softwares.com"
-          sitemap_url: "http://bright-softwares.com/sitemap.xml"
+          site_url: "sc-domain:olympics-paris2024.com"
+          sitemap_url: "https://olympics-paris2024.com/sitemap.xml"
           service_account_json_file_path: "/github/workspace/blog-post-and-keywords-da04acec6e8a.secret.json"
           dry_run: false
           date_offset: -1

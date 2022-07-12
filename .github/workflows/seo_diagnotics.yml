@@ -1,0 +1,66 @@
+name: SEO Diagnostics
+
+on:
+  workflow_dispatch:
+  #push:
+  #  branches:
+  #      - main
+  schedule:
+    - cron: "0 0 * * 6"
+
+jobs:
+  seo_diagnostics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+          
+      - name: Decrypt large secret
+        run: |
+          #./decrypt_secrets.sh
+          ls -lah
+          gpg --quiet --batch --yes --decrypt --passphrase=${{ secrets.LARGE_SECRET_PASSPHRASE }} --output blog-post-and-keywords-da04acec6e8a.secret.json blog-post-and-keywords-da04acec6e8a.secret.json.gpg
+          ls -lah
+        #env:
+        #  LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+      # This command is just an example to show your secret being printed
+      # Ensure you remove any print statements of your secrets. GitHub does
+      # not hide secrets that use this workaround.
+      
+      # Run the main application
+      - name: SEO Advanced analysis
+        uses: BrightSoftwares/blogpost-tools/seo-analysis@main
+        with:
+          site_url: "sc-domain:bright-softwares.com"
+          sitemap_url: "http://bright-softwares.com/sitemap.xml"
+          service_account_json_file_path: "/github/workspace/blog-post-and-keywords-da04acec6e8a.secret.json"
+          dry_run: false
+          date_offset: -1
+          date_duration: -90
+      
+      
+      # Delete the secret json file
+      - name: Delete the secret file
+        run: |
+          ls -lah
+          rm *.secret.json
+          echo "After json secret removal"
+          ls -lah
+          
+      #- uses: actions/checkout@v3
+      - name: Commit the generated files
+        run: |
+          #date > generated.txt
+          CHANGES_EXIST="$(git status --porcelain | wc -l)"
+          echo "There are $CHANGES_EXIST changes to commit"
+          if [ "$CHANGES_EXIST" -eq 0 ]; then
+            echo "There are no changes to commit"
+          else
+            echo "Committing changes"
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .
+            git commit -m "generated and changed files"
+            git push
+          fi
+        # Use GitHub Actions cache to shorten build times and decrease load on servers
+        continue-on-error: true

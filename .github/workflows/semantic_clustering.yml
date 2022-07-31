@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v2
       
       # Run the main application
-      - name: SEO Advanced analysis
-        uses: BrightSoftwares/blogpost-tools/seo-analysis@main
+      - name: Semantic clustering 
+        uses: BrightSoftwares/blogpost-tools/sementic-keyword-clustering@main
         with:
           keyword_suggestions_file: /github/workspace/en/_drafts/keyword_suggestions.csv
           clustered_kw_file: /github/workspace/en/_drafts/keyword_suggestions_sem_clustered.csv

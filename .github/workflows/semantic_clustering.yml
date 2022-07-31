@@ -25,19 +25,13 @@ jobs:
           date_offset: -1
           date_duration: -90
 
-name: "Semantic keyword clustering"
 
-description: "Cluster keywords using artificial intelligence transformers.
-
-inputs:
-  keyword_suggestions_file:
-    description: The path to the file where the keyword suggestions are located.
-  clustered_kw_file:
-    description: The path to the file where you want to store the result of the clustering
-  acceptable_confidence: 0.8
-  cluster_accuracy: 85
-  min_cluster_size: 4
-  transformer: all-MiniLM-L6-v2
+          keyword_suggestions_file:
+          clustered_kw_file:
+          acceptable_confidence: 0.8
+          cluster_accuracy: 85
+          min_cluster_size: 4
+          transformer: all-MiniLM-L6-v2
 
           
       #- uses: actions/checkout@v3

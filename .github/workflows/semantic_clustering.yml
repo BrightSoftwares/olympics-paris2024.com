@@ -20,7 +20,7 @@ jobs:
         with:
           keyword_suggestions_file: /github/workspace/en/_drafts/keyword_suggestions.csv
           clustered_kw_file: /github/workspace/en/_drafts/keyword_suggestions_sem_clustered.csv
-          categories_output_file: /github/workspace/_drafts/kw_categories_clustered.csv
+          categories_output_file: /github/workspace/en/_drafts/kw_categories_clustered.csv
           acceptable_confidence: 0.8
           cluster_accuracy: 85
           min_cluster_size: 4

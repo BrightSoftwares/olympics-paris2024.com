@@ -1,0 +1,60 @@
+name: Semantic clustering
+
+on:
+  workflow_dispatch:
+  #push:
+  #  branches:
+  #      - main
+  #schedule:
+  #  - cron: "0 0 * * 6"
+
+jobs:
+  semantic_clustering:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      # Run the main application
+      - name: SEO Advanced analysis
+        uses: BrightSoftwares/blogpost-tools/seo-analysis@main
+        with:
+          site_url: "sc-domain:olympics-paris2024.com"
+          sitemap_url: "https://olympics-paris2024.com/sitemap.xml"
+          service_account_json_file_path: "/github/workspace/blog-post-and-keywords-da04acec6e8a.secret.json"
+          dry_run: false
+          date_offset: -1
+          date_duration: -90
+
+name: "Semantic keyword clustering"
+
+description: "Cluster keywords using artificial intelligence transformers.
+
+inputs:
+  keyword_suggestions_file:
+    description: The path to the file where the keyword suggestions are located.
+  clustered_kw_file:
+    description: The path to the file where you want to store the result of the clustering
+  acceptable_confidence: 0.8
+  cluster_accuracy: 85
+  min_cluster_size: 4
+  transformer: all-MiniLM-L6-v2
+
+          
+      #- uses: actions/checkout@v3
+      - name: Commit the generated files
+        run: |
+          #date > generated.txt
+          CHANGES_EXIST="$(git status --porcelain | wc -l)"
+          echo "There are $CHANGES_EXIST changes to commit"
+          if [ "$CHANGES_EXIST" -eq 0 ]; then
+            echo "There are no changes to commit"
+          else
+            echo "Committing changes"
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .
+            git commit -m "generated and changed files"
+            git push
+          fi
+        # Use GitHub Actions cache to shorten build times and decrease load on servers
+        continue-on-error: true

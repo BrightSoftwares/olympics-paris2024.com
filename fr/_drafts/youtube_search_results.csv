@@ -1,3 +1,1 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:425edb752454e1a9eee078a7bd5e04f1d7162827a5d5348a2318986ee758baa8
-size 57
+query,video_kind,video_title,video_id,video_description

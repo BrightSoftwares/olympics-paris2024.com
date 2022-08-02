@@ -1,0 +1,9 @@
+Running 3 checks (Scripts, Links, Images) in ["/github/workspace/build"] on *.html files...
+
+
+Checking 7 external links
+Checking 6 internal links
+Ran on 4 files!
+
+
+HTML-Proofer finished successfully.

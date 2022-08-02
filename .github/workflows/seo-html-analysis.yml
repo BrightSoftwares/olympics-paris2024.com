@@ -20,13 +20,22 @@ jobs:
             pre_build_commands: apk --update add ruby-dev imagemagick imagemagick-dev
             build_dir: ./build
             
-      - name: Check HTML
+      - name: Check EN HTML
         uses: fullbright/htmlproofer@master
-        id: htmlproofer
+        id: htmlproofer_en
         with:
           directory: "/github/workspace/build"
           arguments: --assume-extension .html
           output_file: /github/workspace/en/_drafts/html_analysis.txt
+        continue-on-error: true
+        
+      - name: Check FR HTML
+        uses: fullbright/htmlproofer@master
+        id: htmlproofer_fr
+        with:
+          directory: "/github/workspace/build"
+          arguments: --assume-extension .html
+          output_file: /github/workspace/fr/_drafts/html_analysis.txt
         continue-on-error: true
             
             

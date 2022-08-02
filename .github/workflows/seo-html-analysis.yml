@@ -38,7 +38,11 @@ jobs:
           output_file: /github/workspace/fr/_drafts/html_analysis.txt
         continue-on-error: true
             
-            
+      - name: "Delete the ./build folder"
+        run: |
+          rm -rf /github/workspace/build
+          
+          
       - name: "Commit the changes, if any"
         run: |
           #date > generated.txt

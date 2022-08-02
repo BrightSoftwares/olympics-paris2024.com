@@ -1,4 +1,4 @@
-name: Generate jekyll website and analyse the html
+name: Analyse jekyll generated html
 
 on:
   #push:

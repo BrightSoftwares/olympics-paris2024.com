@@ -1,0 +1,47 @@
+name: Generate jekyll website and analyse the html
+
+on:
+  #push:
+  #  branches:
+  #      - master
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
+
+jobs:
+  keyword_suggestions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: fullbright/jekyll-action@master
+        with:
+            token: ${{ secrets.GITHB_TOKEN }}
+            pre_build_commands: apk --update add ruby-dev imagemagick imagemagick-dev
+            build_dir: ./build
+            
+      - name: Check HTML
+        uses: fullbright/htmlproofer@master
+        id: htmlproofer
+        with:
+          directory: "/github/workspace/build"
+          arguments: --assume-extension .html
+          output_file: /github/workspace/en/_drafts/html_analysis.txt
+        continue-on-error: true
+            
+            
+      - name: "Commit the changes, if any"
+        run: |
+          #date > generated.txt
+          CHANGES_EXIST="$(git status --porcelain | wc -l)"
+          echo "There are $CHANGES_EXIST changes to commit"
+          if [ "$CHANGES_EXIST" -eq 0 ]; then
+            echo "There are no changes to commit"
+          else
+            echo "Committing changes"
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add .
+            git commit -m "generated and changed files"
+            git push
+          fi

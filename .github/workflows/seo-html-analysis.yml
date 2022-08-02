@@ -40,8 +40,9 @@ jobs:
             
       - name: "Delete the ./build folder"
         run: |
-          ls -l /github/workspace/build
+          ls -l /github/workspace/
           rm -rf /github/workspace/build
+          ls -l /github/workspace/
           
           
       - name: "Commit the changes, if any"

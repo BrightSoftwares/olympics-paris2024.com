@@ -45,10 +45,11 @@ jobs:
           output_file: /github/workspace/fr/_drafts/html_analysis.txt
         continue-on-error: true
             
-      - name: "Delete the ./build folder"
+      - name: "Delete the build/ and vendor/ folder"
         run: |
           ls -l .
           #rm -rf ./build
+          #rm -rf ./folder
           ls -l .
         continue-on-error: true
           

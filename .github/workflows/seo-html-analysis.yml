@@ -48,7 +48,7 @@ jobs:
       - name: "Delete the ./build folder"
         run: |
           ls -l .
-          rm -rf ./build
+          #rm -rf ./build
           ls -l .
           
           
@@ -65,5 +65,5 @@ jobs:
             git config user.email github-actions@github.com
             git add .
             git commit -m "generated and changed files"
-            git push
+            #git push
           fi

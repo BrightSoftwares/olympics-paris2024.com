@@ -50,7 +50,7 @@ jobs:
           ls -l .
           #rm -rf ./build
           ls -l .
-          
+        continue-on-error: true
           
       - name: "Commit the changes, if any"
         run: |
@@ -65,5 +65,5 @@ jobs:
             git config user.email github-actions@github.com
             git add .
             git commit -m "generated and changed files"
-            #git push
+            git push
           fi
